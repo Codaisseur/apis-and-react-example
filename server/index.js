@@ -39,7 +39,9 @@ app.get('/products', (req, res) => {
 	})
 	  .then(result => {
 	    // do something with result
-	    res.send(result)
+	    res.send({
+	    	products: result
+	    })
 	  })
 	  .catch(err => {
 	    // there was an error, return some HTTP error code
