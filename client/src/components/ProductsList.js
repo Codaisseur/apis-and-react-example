@@ -1,8 +1,9 @@
 import React, {PureComponent} from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
-import {fetchAllProducts} from '../actions/products'
+import {fetchAllProducts, createProduct, deleteProduct} from '../actions/products'
 import {Link} from 'react-router-dom'
+import ProductForm from './ProductForm'
 
 class ProductsList extends PureComponent {
   static propTypes = {
@@ -11,6 +12,14 @@ class ProductsList extends PureComponent {
       name: PropTypes.string.isRequired,
       price: PropTypes.number.isRequired
     })).isRequired
+  }
+
+  createProduct = (product) => {
+    this.props.createProduct(product)
+  }
+
+  deleteProduct = (productId) => {
+    this.props.deleteProduct(productId)
   }
 
   componentWillMount() {
@@ -29,6 +38,7 @@ class ProductsList extends PureComponent {
               <th>#</th>
               <th>Name</th>
               <th>Price</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -38,9 +48,14 @@ class ProductsList extends PureComponent {
                 <Link to={ `/products/${product.id}` }>{product.name}</Link>
               </td>
               <td>&euro; {product.price}.00</td>
+              <td><button onClick={ () => this.deleteProduct(product.id) }>X</button></td>
             </tr>)) }
           </tbody>
 				</table>
+
+        <h1>Create a new product</h1>
+
+        <ProductForm onSubmit={this.createProduct} />
       </div>
     )
   }
@@ -52,4 +67,8 @@ const mapStateToProps = function (state) {
   }
 }
 
-export default connect(mapStateToProps, { fetchAllProducts })(ProductsList)
+export default connect(mapStateToProps, {
+  fetchAllProducts,
+  createProduct,
+  deleteProduct
+})(ProductsList)
