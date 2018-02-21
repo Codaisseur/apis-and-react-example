@@ -1,5 +1,8 @@
 const express = require('express')
+const bodyParser = require('body-parser')
+
 const app = express()
+app.use(bodyParser.json())
 
 var Sequelize = require('sequelize')
 var sequelize = new Sequelize('postgres://postgres:secret@localhost:5432/postgres')
@@ -62,5 +65,61 @@ app.get('/products/:id', (req, res) => {
 	  })
 	  .catch(err => {
 	    res.status(500).send({error: 'Something went wrong with Postgres'})
+	  })
+})
+
+app.post('/products', (req, res) => {
+  const product = req.body
+  console.log(product)
+
+  Product.create(product).then(entity => {
+
+    // send back the 201 Created status and the entity
+    res.status(201).send(entity)
+  })
+})
+
+app.put('/products/:id', (req, res) => {
+  const productId = Number(req.params.id)
+  const updates = req.body
+
+  // find the product in the DB
+  Product.findById(req.params.id)
+    .then(entity => {
+      // change the product and store in DB
+      return entity.update(updates)
+    })
+    .then(final => {
+      // respond with the changed product and status code 200 OK
+      res.send(final)
+    })
+    .catch(error => {
+      res.status(500).send({
+        message: `Something went wrong`,
+        error
+      })
+    })
+
+})
+
+app.delete('/products/:id', (req, res) => {
+  const productId = Number(req.params.id)
+
+  Product.findById(req.params.id)
+	  .then(entity => {
+	    // change the product and store in DB
+	    return entity.destroy()
+	  })
+	  .then(_ => {
+	    // respond with the changed product and status code 200 OK
+	    res.send({
+	      message: 'The product was deleted succesfully'
+	    })
+	  })
+	  .catch(error => {
+	    res.status(500).send({
+	      message: `Something went wrong`,
+	      error
+	    })
 	  })
 })
