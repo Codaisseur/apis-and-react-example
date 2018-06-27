@@ -9,12 +9,12 @@ class ProductForm extends PureComponent {
 	}
 
 	handleChange = (event) => {
-		const {name, value} = event.target
+    const {name, value} = event.target
 
-		this.setState({
-		  [name]: value
-		})
-	}
+    this.setState({
+      [name]: value
+    })
+  }
 
 	render() {
 		const initialValues = this.props.initialValues || {}
@@ -23,21 +23,21 @@ class ProductForm extends PureComponent {
 				<div>
 					<label htmlFor="name">Product name</label>
 					<input name="name" id="name" value={
-						this.state.name || initialValues.name || ''
+						this.state.name !== undefined ? this.state.name : initialValues.name
 					} onChange={ this.handleChange } />
 				</div>
 
 				<div>
 					<label htmlFor="price">Product price</label>
 					<input name="price" id="price" value={
-						this.state.price || initialValues.price || ''
+						this.state.price !== undefined ? this.state.price : initialValues.price
 					} onChange={ this.handleChange } />
 				</div>
 
 				<div>
 					<label htmlFor="description">Product description</label>
 					<input name="description" id="description" value={
-						this.state.description || initialValues.description || ''
+						this.state.description !== undefined ? this.state.description : initialValues.description
 					} onChange={ this.handleChange } />
 				</div>
 
